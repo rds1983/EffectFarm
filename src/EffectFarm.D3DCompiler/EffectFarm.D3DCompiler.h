@@ -2,6 +2,7 @@
 
 #include <d3dcompiler.h>
 #include <vector>
+#include <memory>
 #include <vcclr.h>
 
 #pragma comment(lib,"d3dcompiler.lib")
@@ -11,6 +12,41 @@ using namespace System::Collections::Generic;
 using namespace System::Runtime::InteropServices;
 
 namespace EffectFarm {
+	struct CharHolder
+	{
+		char *str;
+
+		CharHolder(String ^data)
+		{
+			str = (char*)(void*)Marshal::StringToHGlobalAnsi(data);
+		}
+
+		~CharHolder()
+		{
+			if (str != nullptr)
+			{
+				Marshal::FreeHGlobal(IntPtr((void *)str));
+			}
+		}
+
+		operator char *()
+		{
+			return str;
+		}
+	};
+
+	struct CharHolders
+	{
+		std::vector<std::shared_ptr<CharHolder>> holders;
+
+		char *Add(String ^str)
+		{
+			holders.push_back(std::shared_ptr<CharHolder>(new CharHolder(str)));
+
+			return (char *)*holders.back();
+		}
+	};
+
 	public ref class D3DCompiler
 	{
 	public:
@@ -20,14 +56,16 @@ namespace EffectFarm {
 		{
 			UINT flags = D3DCOMPILE_ENABLE_STRICTNESS;
 
+			CharHolders charHolders;
+
 			// Convert defines to macroses
 			std::vector<D3D_SHADER_MACRO> macroses;
 			for each(auto pair in defines)
 			{
 				D3D_SHADER_MACRO macro;
 
-				macro.Name = (char*)(void*)Marshal::StringToHGlobalAnsi(pair.Key);
-				macro.Definition = (char*)(void*)Marshal::StringToHGlobalAnsi(pair.Value);
+				macro.Name = charHolders.Add(pair.Key);
+				macro.Definition = charHolders.Add(pair.Value);
 				macroses.push_back(macro);
 			}
 
@@ -35,7 +73,8 @@ namespace EffectFarm {
 			macroses.push_back(D3D_SHADER_MACRO());
 
 			pin_ptr<const wchar_t> wPath = PtrToStringChars(path);
-			LPCSTR aTarget = (char*)(void*)Marshal::StringToHGlobalAnsi(target);
+
+			LPCSTR aTarget = charHolders.Add(target);
 
 			// Compile
 			ID3DBlob* shaderBlob = nullptr;
@@ -50,23 +89,43 @@ namespace EffectFarm {
 				&shaderBlob,
 				&errorBlob);
 
-			// Free allocated strings
-			for (size_t i = 0; i < macroses.size(); ++i)
+			if (FAILED(hr))
 			{
-				if (macroses[i].Name)
+				String ^err = String::Empty;
+				if (errorBlob)
 				{
-					Marshal::FreeHGlobal(IntPtr((void *)macroses[i].Name));
+					err = gcnew String((char*)errorBlob->GetBufferPointer());
+					errorBlob->Release();
 				}
 
-				if (macroses[i].Definition)
+				if (shaderBlob)
 				{
-					Marshal::FreeHGlobal(IntPtr((void *)macroses[i].Definition));
+					shaderBlob->Release();
 				}
+
+				throw gcnew Exception(err);
 			}
 
-			Marshal::FreeHGlobal(IntPtr((void *)aTarget));
+			if (errorBlob)
+			{
+				errorBlob->Release();
+			}
 
-			return nullptr;
+
+			array<unsigned char> ^result;
+			if (shaderBlob)
+			{
+				result = gcnew array<unsigned char>(shaderBlob->GetBufferSize());
+
+				Marshal::Copy(IntPtr(shaderBlob->GetBufferPointer()), 
+					result, 
+					0, 
+					result->Length);
+
+				shaderBlob->Release();
+			}
+
+			return result;
 		}
 	};
 }

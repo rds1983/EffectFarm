@@ -42,6 +42,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\EffectFarm\EFConfig.cs">
+      <Link>EFConfig.cs</Link>
+    </Compile>
+    <Compile Include="..\EffectFarm\EFTarget.cs">
+      <Link>EFTarget.cs</Link>
+    </Compile>
+    <Compile Include="..\EffectFarm\EFVariant.cs">
+      <Link>EFVariant.cs</Link>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
