@@ -6,7 +6,9 @@
     <AssemblyName>efc</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\EffectFarm\EFParser.cs" Link="EFParser.cs" />
     <Compile Include="..\EffectFarm\EFPlatform.cs" Link="EFPlatform.cs" />
+    <Compile Include="..\EffectFarm\EFSource.cs" Link="EFSource.cs" />
     <Compile Include="..\EffectFarm\EFVariant.cs" Link="EFVariant.cs" />
   </ItemGroup>
   <ItemGroup>

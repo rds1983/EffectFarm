@@ -257,65 +257,12 @@ namespace EffectFarm
 			return result.ToArray();
 		}
 
-		static int StringWriteSize(string s)
+		static void WriteOutput(BinaryWriter writer, EFVariant variant, byte[] data)
 		{
-			var result = sizeof(int);
-			if (!string.IsNullOrEmpty(s))
-			{
-				result += s.Length;
-			}
-
-			return result;
-		}
-
-		static void WriteInt(Stream output, int value)
-		{
-			var byteData = BitConverter.GetBytes(value);
-
-			output.Write(byteData, 0, byteData.Length);
-		}
-
-		static void WriteString(Stream output, string value)
-		{
-			var size = StringWriteSize(value);
-			WriteInt(output, size);
-			if (size > 0)
-			{
-				var bytes = Encoding.UTF8.GetBytes(value);
-				output.Write(bytes, 0, bytes.Length);
-			}
-		}
-
-		static void WriteOutput(Stream output, EFVariant variant, byte[] data)
-		{
-			var size = 0;
-
-			// Platform type
-			size += sizeof(int);
-
-			// Defines
-			size += StringWriteSize(variant.Defines);
-
-			// Bytecode size
-			size += sizeof(int);
-
-			// Bytecode
-			size += data.Length;
-
-			// Write whole block size
-			WriteInt(output, size);
-
-			// Write platform type
-			WriteInt(output, (int)variant.Platform);
-
-			// Write defines
-			WriteString(output, variant.Defines);
-
-			// Write bytecode size
-			WriteInt(output, data.Length);
-
-			// Write bytecode
-			output.Write(data, 0, data.Length);
+			writer.Write((int)variant.Platform);
+			writer.Write(variant.Defines);
+			writer.Write(data.Length);
+			writer.Write(data);
 		}
 
 		static void Main(string[] args)
@@ -359,6 +306,24 @@ namespace EffectFarm
 			var consoseEffectCompilerOutput = new ConsoleEffectCompilerOutput();
 
 			var intermediateFile = Path.ChangeExtension(args[0], "intermediate");
+
+			if (File.Exists(intermediateFile))
+			{
+				try
+				{
+					using (var input = File.OpenRead(intermediateFile))
+					{
+						var sources = EFParser.LocateSources(input);
+
+						var k = 5;
+					}
+				}
+				catch (Exception ex)
+				{
+					Log(ex.ToString());
+				}
+			}
+
 			var importerContext = new ImporterContext();
 			var processorContext = new ProcessorContext();
 
@@ -367,7 +332,8 @@ namespace EffectFarm
 
 			try
 			{
-				using (var output = File.OpenWrite(intermediateFile))
+				using (var stream = File.OpenWrite(intermediateFile))
+				using (var writer = new BinaryWriter(stream))
 				{
 					foreach (var variant in variants)
 					{
@@ -386,7 +352,7 @@ namespace EffectFarm
 
 								var result = effectProcesor.Process(content, processorContext);
 
-								WriteOutput(output, variant, result.GetEffectCode());
+								WriteOutput(writer, variant, result.GetEffectCode());
 							}
 							break;
 							case EFPlatform.FNA:
@@ -403,7 +369,7 @@ namespace EffectFarm
 									GenerateError(result.Message);
 								}
 
-								WriteOutput(output, variant, result.Bytecode);
+								WriteOutput(writer, variant, result.Bytecode);
 							}
 							break;
 						}
