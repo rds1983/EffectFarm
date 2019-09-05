@@ -1,6 +1,6 @@
 ﻿namespace EffectFarm
 {
-	public enum EFTarget
+	public enum EFPlatform
 	{
 		MonoGameDirectX,
 		MonoGameOpenGL,

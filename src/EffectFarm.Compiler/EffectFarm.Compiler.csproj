@@ -1,61 +1,24 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{53E520B0-1C2D-4953-9B45-F884FD01D1C6}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>EffectFarm.Compiler</RootNamespace>
-    <AssemblyName>EffectFarm.Compiler</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <Deterministic>true</Deterministic>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <TargetFramework>net472</TargetFramework>
+    <PackageId>EffectFarm.Compiler</PackageId>
+    <AssemblyName>efc</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
+    <Compile Include="..\EffectFarm\EFPlatform.cs" Link="EFPlatform.cs" />
+    <Compile Include="..\EffectFarm\EFVariant.cs" Link="EFVariant.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\EffectFarm\EFConfig.cs">
-      <Link>EFConfig.cs</Link>
-    </Compile>
-    <Compile Include="..\EffectFarm\EFTarget.cs">
-      <Link>EFTarget.cs</Link>
-    </Compile>
-    <Compile Include="..\EffectFarm\EFVariant.cs">
-      <Link>EFVariant.cs</Link>
-    </Compile>
-    <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <ProjectReference Include="..\..\deps\MonoGame\MonoGame.Framework.Content.Pipeline\MonoGame.Framework.Content.Pipeline.Windows.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\EffectFarm.D3DCompiler\EffectFarm.D3DCompiler.vcxproj" />
+    <Reference Include="SharpDX">
+      <HintPath>..\..\deps\MonoGame\ThirdParty\Dependencies\SharpDX\net40\SharpDX.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.D3DCompiler">
+      <HintPath>..\..\deps\MonoGame\ThirdParty\Dependencies\SharpDX\SharpDX.D3DCompiler.dll</HintPath>
+    </Reference>
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
+

@@ -1,9 +1,19 @@
 ﻿namespace EffectFarm
 {
-	public class EFVariant
+	public struct EFVariant
 	{
-		public string Name { get; set; }
-		public bool IsBinary { get; set; }
-		public string[] Values { get; set; }
+		public EFPlatform Platform;
+		public string Defines;
+
+		public EFVariant(EFPlatform platform)
+		{
+			Platform = platform;
+			Defines = string.Empty;
+		}
+
+		public override string ToString()
+		{
+			return Platform + "/" + Defines;
+		}
 	}
 }
