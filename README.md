@@ -1,5 +1,7 @@
 # Overview
-EffectFarm is MonoGame/FNA framework to compile multiple variants of one effect. It consists of two parts:
+EffectFarm is MonoGame/FNA framework to compile multiple variants of one effect. 
+
+It consists of two parts:
 * efc.exe - a command line utility that compiles multiple variants of one effect according to provided config file in xml format.
 * EffectFarm - a library to consume result produced by efc.exe
 
@@ -32,6 +34,7 @@ Following is example of compiler config file:
 </Root>
 ```
 It consists of targets lists and variants tree.
+
 Above config would compile the effect with following variants of defines:
 1. [No defines]
 2. BONES=1
@@ -43,6 +46,7 @@ Above config would compile the effect with following variants of defines:
 8. LIGHTNING=1;BONES=4
 
 As above config also defines all 3 possible targets(MonoGameDirectX, MonoGameOpenGL, FNA), total amount of different effect variants would be 24(3 * 8).
+
 And efc.exe would output following:
 ```
 Effect farm compiler to efb 1.
@@ -94,12 +98,14 @@ There are two ways of referencing EffectFarm in the project:
     c. Add EffectFarm/src/EffectFarm/EffectFarm.csproj to the solution.
     
 ## MultiVariantEffect
-To create MultiVariantEffect it is required to provide Func<Stream> that opens a stream with .efb file. As it is going to be opened multiple times: one time in constructor to gather information what variants does .efb contains and one time for every GetEffect call witn unique defines.
+To create MultiVariantEffect it is required to provide Func;lt&Stream;gt& that opens a stream with .efb file. As it is going to be opened multiple times: one time in constructor to gather information what variants does .efb contains and one time for every GetEffect call witn unique defines.
+
 This is example code of MultiVariantEffect creation:
 ```c#
   MultiVariantEffect multiEffect = new MultiVariantEffect(() => File.OpenRead("DefaultEffect.efb"));
 ```
     
+
 And this code loads specified effect:
 ```c#
   Effect effect = multiEffect.GetEffect(graphicsDevice, new Dictionary<string, string>
@@ -108,4 +114,6 @@ And this code loads specified effect:
     ["LIGHTNING"]="1"
   });
 ```
-    
+
+It is important to note that MultiVariantEffect.GetEffect caches Effect with key created from provided list of defines.
+
