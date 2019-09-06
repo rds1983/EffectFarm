@@ -1,16 +1,35 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 namespace EffectFarm
 {
-	class EFParser
+	public class EFParser
 	{
+		public const string EfbSignature = "EFB";
+		public const int EfbVersion = 1;
+
 		public static EFSource[] LocateSources(Stream input)
 		{
 			var result = new List<EFSource>();
 
 			using (var reader = new BinaryReader(input))
 			{
+				// Signature
+				var sig = Encoding.UTF8.GetString(reader.ReadBytes(3));
+				if (sig != EfbSignature)
+				{
+					throw new Exception("Wrong signature");
+				}
+
+				var version = reader.ReadInt32();
+				if (version != EfbVersion)
+				{
+					throw new Exception(string.Format("Wrong efb version. File version: {0}, supported version: {1}",
+						version, EfbVersion));
+				}
+
 				while (true)
 				{
 					try

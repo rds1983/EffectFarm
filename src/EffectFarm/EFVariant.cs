@@ -15,5 +15,20 @@
 		{
 			return Platform + "/" + Defines;
 		}
+
+		public bool Equals(EFVariant v)
+		{
+			return Platform == v.Platform && Defines == v.Defines;
+		}
+
+		public static bool operator ==(EFVariant a, EFVariant b)
+		{
+			return a.Equals(b);
+		}
+
+		public static bool operator !=(EFVariant a, EFVariant b)
+		{
+			return !a.Equals(b);
+		}
 	}
 }

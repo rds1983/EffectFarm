@@ -265,6 +265,35 @@ namespace EffectFarm
 			writer.Write(data);
 		}
 
+		static EFVariant[] Substract(EFVariant[] variants, string path)
+		{
+			var variantsList = variants.ToList();
+
+			try
+			{
+				var sources = new EFSource[0];
+				using (var input = File.OpenRead(path))
+				{
+					sources = EFParser.LocateSources(input);
+					foreach(var source in sources)
+					{
+						foreach(var variant in variants)
+						{
+							if (source.Variant == variant)
+							{
+								variantsList.Remove(variant);
+							}
+						}
+					}
+				}
+			}
+			catch (Exception)
+			{
+			}
+
+			return variantsList.ToArray();
+		}
+
 		static void Main(string[] args)
 		{
 			if (args.Length < 2)
@@ -273,13 +302,30 @@ namespace EffectFarm
 				return;
 			}
 
-			// Parse config
-			var config = new Config();
 			try
 			{
-				var doc = XDocument.Parse(File.ReadAllText(args[1]));
+				var inputFile = args[0];
+				if (!File.Exists(inputFile))
+				{
+					Log("Could not find '0'", inputFile);
+					return;
+				}
 
-				config.Targets = ParseTargets(doc);
+				var inputDt = File.GetLastWriteTime(inputFile);
+
+				var configFile = args[1];
+				if (!File.Exists(inputFile))
+				{
+					Log("Could not find '0'", inputFile);
+					return;
+				}
+				var doc = XDocument.Parse(File.ReadAllText(configFile));
+
+				// Parse config
+				var config = new Config
+				{
+					Targets = ParseTargets(doc)
+				};
 				if (config.Targets.Length == 0)
 				{
 					GenerateError("No target platforms");
@@ -292,49 +338,36 @@ namespace EffectFarm
 				}
 
 				config.Root = ParseEntry(rootEntry);
-			}
-			catch (Exception ex)
-			{
-				Log(ex.ToString());
-				return;
-			}
 
-			var variants = config.BuildVariants();
+				var variants = config.BuildVariants().ToArray();
 
-			var workingFolder = Path.GetDirectoryName(args[0]);
-			var includeFx = new IncludeFX(workingFolder);
-			var consoseEffectCompilerOutput = new ConsoleEffectCompilerOutput();
-
-			var intermediateFile = Path.ChangeExtension(args[0], "intermediate");
-
-			if (File.Exists(intermediateFile))
-			{
-				try
+				var outputFile = Path.ChangeExtension(inputFile, "efb");
+				if (File.Exists(outputFile) && File.GetLastWriteTime(outputFile) > inputDt)
 				{
-					using (var input = File.OpenRead(intermediateFile))
+					var resultVariants = Substract(variants, outputFile);
+					if (resultVariants.Length == 0)
 					{
-						var sources = EFParser.LocateSources(input);
-
-						var k = 5;
+						Log("{0} is up to date", Path.GetFileName(outputFile));
+						return;
 					}
 				}
-				catch (Exception ex)
-				{
-					Log(ex.ToString());
-				}
-			}
 
-			var importerContext = new ImporterContext();
-			var processorContext = new ProcessorContext();
+				var workingFolder = Path.GetDirectoryName(inputFile);
+				var includeFx = new IncludeFX(workingFolder);
+				var consoseEffectCompilerOutput = new ConsoleEffectCompilerOutput();
 
-			var effectImporter = new EffectImporter();
-			var effectProcesor = new EffectProcessor();
+				var importerContext = new ImporterContext();
+				var processorContext = new ProcessorContext();
 
-			try
-			{
-				using (var stream = File.OpenWrite(intermediateFile))
+				var effectImporter = new EffectImporter();
+				var effectProcesor = new EffectProcessor();
+
+				using (var stream = File.OpenWrite(outputFile))
 				using (var writer = new BinaryWriter(stream))
 				{
+					writer.Write(Encoding.UTF8.GetBytes(EFParser.EfbSignature));
+					writer.Write(EFParser.EfbVersion);
+
 					foreach (var variant in variants)
 					{
 						Log(variant.ToString());
@@ -344,7 +377,7 @@ namespace EffectFarm
 							case EFPlatform.MonoGameDirectX:
 							case EFPlatform.MonoGameOpenGL:
 							{
-								var content = effectImporter.Import(args[0], importerContext);
+								var content = effectImporter.Import(inputFile, importerContext);
 
 								processorContext._targetPlatform = variant.Platform == EFPlatform.MonoGameDirectX ?
 									TargetPlatform.Windows : TargetPlatform.DesktopGL;
@@ -357,7 +390,7 @@ namespace EffectFarm
 							break;
 							case EFPlatform.FNA:
 							{
-								var result = ShaderBytecode.CompileFromFile(args[0],
+								var result = ShaderBytecode.CompileFromFile(inputFile,
 									"fx_2_0",
 									ShaderFlags.OptimizationLevel3,
 									EffectFlags.None,
@@ -375,6 +408,8 @@ namespace EffectFarm
 						}
 					}
 				}
+
+				Log("Compilation to {0} was succesful", Path.GetFileName(outputFile));
 			}
 			catch (Exception ex)
 			{
