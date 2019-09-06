@@ -102,7 +102,7 @@ This is example code of MultiVariantEffect creation:
     
 And this code loads specified effect:
 ```c#
-  Effect effect = multiEffect.GetEffect(new Dictionary<string, string>
+  Effect effect = multiEffect.GetEffect(graphicsDevice, new Dictionary<string, string>
   {
     ["BONES"]="1",
     ["LIGHTNING"]="1"
