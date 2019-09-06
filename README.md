@@ -9,7 +9,7 @@ It consists of two parts:
 
 # efc.exe
 ## Obtaining
-The easiest way to obtain efc is to download latest binary release(EffectFarm.v.v.v.v.zip) from [releases](https://github.com/rds1983/EffectFarm/releases) and unpack it.
+The easiest way to obtain efc is to download is to download it from [releases](https://github.com/rds1983/EffectFarm/releases).
 
 ## Compiling
 `efc.exe DefaultEffect.fx DefaultEffect.xml`
