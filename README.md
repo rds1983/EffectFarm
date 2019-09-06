@@ -91,11 +91,11 @@ There are two ways of referencing EffectFarm in the project:
 
     b. `git submodule update --init --recursive`
     
-    b. Copy SolutionDefines.targets from EffectFarm/build/MonoGame(or EffectFarm/build/FNA) to your solution folder.
+    c. Copy SolutionDefines.targets from EffectFarm/build/MonoGame(or EffectFarm/build/FNA) to your solution folder.
 
       * If FNA is used, SolutionDefines.targets needs to be edited and FNAProj variable should be updated to the location of FNA.csproj next to the EffectFarm location.
     
-    c. Add EffectFarm/src/EffectFarm/EffectFarm.csproj to the solution.
+    d. Add EffectFarm/src/EffectFarm/EffectFarm.csproj to the solution.
     
 ## MultiVariantEffect
 To create MultiVariantEffect it is required to provide Func&lt;Stream&gt; that opens a stream with .efb file. As it is going to be opened multiple times: one time in constructor to gather information what variants does .efb contains and one time for every GetEffect call witn unique defines.
