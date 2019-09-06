@@ -47,7 +47,8 @@ namespace EffectFarm
 			var bytes = new byte[source.Size];
 			using (var stream = _streamOpener())
 			{
-				stream.Read(bytes, source.Offset, source.Size);
+				stream.Seek(source.Offset, SeekOrigin.Begin);
+				stream.Read(bytes, 0, source.Size);
 			}
 
 			result = new Effect(device, bytes);
