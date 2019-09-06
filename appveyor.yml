@@ -12,6 +12,8 @@ build_script:
 - cmd: >-
     git submodule update --init --recursive
 
+    deps\MonoGame\Protobuild.exe
+
     build_all.bat
 artifacts:
   - path: src/EffectFarm/bin/MonoGame/Release/EffectFarm.MonoGame.$(appveyor_build_version).nupkg
