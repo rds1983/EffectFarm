@@ -98,7 +98,7 @@ There are two ways of referencing EffectFarm in the project:
     c. Add EffectFarm/src/EffectFarm/EffectFarm.csproj to the solution.
     
 ## MultiVariantEffect
-To create MultiVariantEffect it is required to provide Func;lt&Stream;gt& that opens a stream with .efb file. As it is going to be opened multiple times: one time in constructor to gather information what variants does .efb contains and one time for every GetEffect call witn unique defines.
+To create MultiVariantEffect it is required to provide Func&lt;Stream;gt& that opens a stream with .efb file. As it is going to be opened multiple times: one time in constructor to gather information what variants does .efb contains and one time for every GetEffect call witn unique defines.
 
 This is example code of MultiVariantEffect creation:
 ```c#
