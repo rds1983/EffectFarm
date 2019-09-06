@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace EffectFarm
 {
@@ -30,15 +31,8 @@ namespace EffectFarm
 				var parts2 = parts[1].Split(';');
 				foreach(var p in parts2)
 				{
-					if (string.IsNullOrEmpty(p))
-					{
-						defines[string.Empty] = string.Empty;
-					}
-					else
-					{
-						var parts3 = p.Split('=');
-						defines[parts3[0]] = parts3[1];
-					}
+					var parts3 = p.Split('=');
+					defines[parts3[0]] = parts3[1];
 				}
 			}
 
@@ -63,9 +57,9 @@ namespace EffectFarm
 
 			return string.Join(";",
 				from k in defines.Keys
+				where !string.IsNullOrEmpty(k)
 				orderby k
-				select string.IsNullOrEmpty(k) ? string.Empty :
-					k + "=" + defines[k]);
+				select k + "=" + defines[k]);
 		}
 
 		public static string BuildKey(EFPlatform platform, Dictionary<string, string> defines)

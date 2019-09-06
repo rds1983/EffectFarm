@@ -61,8 +61,8 @@ namespace EffectFarm
 		}
 
 		private static ProcessorLogger _processorLogger = new ProcessorLogger();
-		private static string _intermediateDirectory;
-		private static string _outputDirectory;
+		private static string _intermediateDirectory = string.Empty;
+		private static string _outputDirectory = string.Empty;
 
 		class ImporterContext : ContentImporterContext
 		{
@@ -83,7 +83,7 @@ namespace EffectFarm
 		class ProcessorContext : ContentProcessorContext
 		{
 			public TargetPlatform _targetPlatform;
-			public string _outputFile;
+			public string _outputFile = string.Empty;
 
 			private readonly List<string> _dependencies = new List<string>();
 
@@ -232,6 +232,7 @@ namespace EffectFarm
 			if (variant.Defines != null)
 			{
 				var orderedKeys = from k in variant.Defines.Keys
+								  where !string.IsNullOrEmpty(k)
 								  orderby k
 								  select k;
 
@@ -282,9 +283,11 @@ namespace EffectFarm
 
 		static void Main(string[] args)
 		{
+			Log("Effect farm compiler to efb {0}.", EFParser.EfbVersion);
+
 			if (args.Length < 2)
 			{
-				Log("Usage: efc <input_file> <config_file>");
+				Log("Usage: efc <input_file> <config_file> [output_file]");
 				return;
 			}
 
@@ -296,8 +299,6 @@ namespace EffectFarm
 					Log("Could not find '0'.", inputFile);
 					return;
 				}
-
-				var inputDt = File.GetLastWriteTime(inputFile);
 
 				var configFile = args[1];
 				if (!File.Exists(inputFile))
@@ -327,8 +328,20 @@ namespace EffectFarm
 
 				var variants = config.BuildVariants().ToArray();
 
-				var outputFile = Path.ChangeExtension(inputFile, "efb");
-				if (File.Exists(outputFile) && File.GetLastWriteTime(outputFile) > inputDt)
+				var outputFile = string.Empty;
+
+				if (args.Length < 3)
+				{
+					outputFile = Path.ChangeExtension(inputFile, "efb");
+				} else
+				{
+					outputFile = Path.ChangeExtension(args[2], "efb");
+				}
+
+				var outputLwt = File.GetLastWriteTime(outputFile);
+				if (File.Exists(outputFile) && 
+					outputLwt > File.GetLastWriteTime(inputFile) &&
+					outputLwt > File.GetLastWriteTime(configFile))
 				{
 					var resultVariants = Substract(variants, outputFile);
 					if (resultVariants.Length == 0)
