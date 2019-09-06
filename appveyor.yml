@@ -12,7 +12,11 @@ build_script:
 - cmd: >-
     git submodule update --init --recursive
 
-    deps\MonoGame\Protobuild.exe
+    cd deps\MonoGame
+
+    Protobuild.exe
+
+    cd ..\..
 
     build_all.bat
 artifacts:
