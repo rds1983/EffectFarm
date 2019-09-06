@@ -18,10 +18,12 @@ namespace EffectFarm
 					var variant = new EFVariant
 					{
 						Platform = sourceVariant.Platform,
-						Defines = string.IsNullOrEmpty(sourceVariant.Defines)?
-							define.ToString():
-							sourceVariant.Defines + ";" + define.ToString()
+						Defines = sourceVariant.Defines != null ?
+							new Dictionary<string, string>(sourceVariant.Defines) :
+							new Dictionary<string, string>()
 					};
+
+					variant.Defines[define.Name] = define.Value;
 
 					result.Add(variant);
 				}

@@ -10,10 +10,9 @@ namespace EffectFarm
 		public const string EfbSignature = "EFB";
 		public const int EfbVersion = 1;
 
-		public static EFSource[] LocateSources(Stream input)
+		public static Dictionary<string, EFSource> LocateSources(Stream input)
 		{
-			var result = new List<EFSource>();
-
+			var result = new Dictionary<string, EFSource>();
 			using (var reader = new BinaryReader(input))
 			{
 				// Signature
@@ -36,26 +35,26 @@ namespace EffectFarm
 					{
 						var source = new EFSource();
 
-						source.Variant.Platform = (EFPlatform)reader.ReadInt32();
-						source.Variant.Defines = reader.ReadString();
+						var data = reader.ReadString();
+						source.Variant = EFVariant.FromString(data);
 
 						var size = reader.ReadInt32();
-						source.Start = (int)input.Position;
+						source.Offset = (int)input.Position;
 						source.Size = size;
 
 						// Skip data
 						input.Seek(size, SeekOrigin.Current);
 
-						result.Add(source);
+						result[data] = source;
 					}
-					catch(EndOfStreamException)
+					catch (EndOfStreamException)
 					{
 						break;
 					}
 				}
 			}
 
-			return result.ToArray();
+			return result;
 		}
 	}
 }

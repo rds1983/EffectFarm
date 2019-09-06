@@ -229,14 +229,15 @@ namespace EffectFarm
 		{
 			var result = new List<ShaderMacro>();
 
-			if (!string.IsNullOrEmpty(variant.Defines))
+			if (variant.Defines != null)
 			{
-				var parts = variant.Defines.Split(';');
-				foreach (var part in parts)
-				{
-					var parts2 = part.Split('=');
+				var orderedKeys = from k in variant.Defines.Keys
+								  orderby k
+								  select k;
 
-					result.Add(new ShaderMacro(parts2[0], parts2[1]));
+				foreach(var k in orderedKeys)
+				{
+					result.Add(new ShaderMacro(k, variant.Defines[k]));
 				}
 			}
 
@@ -245,8 +246,7 @@ namespace EffectFarm
 
 		static void WriteOutput(BinaryWriter writer, EFVariant variant, byte[] data)
 		{
-			writer.Write((int)variant.Platform);
-			writer.Write(variant.Defines);
+			writer.Write(variant.ToString());
 			writer.Write(data.Length);
 			writer.Write(data);
 		}
@@ -257,15 +257,15 @@ namespace EffectFarm
 
 			try
 			{
-				var sources = new EFSource[0];
+				Dictionary<string, EFSource> sources;
 				using (var input = File.OpenRead(path))
 				{
 					sources = EFParser.LocateSources(input);
-					foreach(var source in sources)
+					foreach(var pair in sources)
 					{
 						foreach(var variant in variants)
 						{
-							if (source.Variant == variant)
+							if (pair.Key == variant.ToString())
 							{
 								variantsList.Remove(variant);
 							}
@@ -368,7 +368,7 @@ namespace EffectFarm
 
 								processorContext._targetPlatform = variant.Platform == EFPlatform.MonoGameDirectX ?
 									TargetPlatform.Windows : TargetPlatform.DesktopGL;
-								effectProcesor.Defines = variant.Defines;
+								effectProcesor.Defines = EFVariant.BuildKey(variant.Defines);
 
 								var result = effectProcesor.Process(content, processorContext);
 
