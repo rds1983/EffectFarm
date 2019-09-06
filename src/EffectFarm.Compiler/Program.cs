@@ -10,7 +10,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
-using TwoMGFX;
 
 namespace EffectFarm
 {
@@ -40,19 +39,6 @@ namespace EffectFarm
 			public Stream Open(IncludeType type, string fileName, Stream parentStream)
 			{
 				return new FileStream(Path.Combine(_folder, fileName), FileMode.Open);
-			}
-		}
-
-		class ConsoleEffectCompilerOutput : IEffectCompilerOutput
-		{
-			public void WriteWarning(string file, int line, int column, string message)
-			{
-				Log("Warning: {0}({1},{2}): {3}", file, line, column, message);
-			}
-
-			public void WriteError(string file, int line, int column, string message)
-			{
-				GenerateError("Error: {0}({1},{2}): {3}", file, line, column, message);
 			}
 		}
 
@@ -182,7 +168,7 @@ namespace EffectFarm
 			var targets = (from n in doc.Descendants("Targets") select n).FirstOrDefault();
 			if (targets == null)
 			{
-				GenerateError("Could not find 'Targets' node");
+				GenerateError("Could not find 'Targets' node.");
 			}
 
 			var targetsList = new List<EFPlatform>();
@@ -191,7 +177,7 @@ namespace EffectFarm
 				EFPlatform targetValue;
 				if (!Enum.TryParse(target.Name.ToString(), out targetValue))
 				{
-					GenerateError("Target '{0}' isn't supported", target.ToString());
+					GenerateError("Target '{0}' isn't supported.", target.ToString());
 				}
 
 				targetsList.Add(targetValue);
@@ -229,7 +215,7 @@ namespace EffectFarm
 				}
 				else
 				{
-					GenerateError("Unknown node {0}", element.Name);
+					GenerateError("Unknown node {0}.", element.Name);
 				}
 			}
 
@@ -307,7 +293,7 @@ namespace EffectFarm
 				var inputFile = args[0];
 				if (!File.Exists(inputFile))
 				{
-					Log("Could not find '0'", inputFile);
+					Log("Could not find '0'.", inputFile);
 					return;
 				}
 
@@ -316,7 +302,7 @@ namespace EffectFarm
 				var configFile = args[1];
 				if (!File.Exists(inputFile))
 				{
-					Log("Could not find '0'", inputFile);
+					Log("Could not find '0'.", inputFile);
 					return;
 				}
 				var doc = XDocument.Parse(File.ReadAllText(configFile));
@@ -328,13 +314,13 @@ namespace EffectFarm
 				};
 				if (config.Targets.Length == 0)
 				{
-					GenerateError("No target platforms");
+					GenerateError("No target platforms.");
 				}
 
 				var rootEntry = (from n in doc.Descendants("RootEntry") select n).FirstOrDefault();
 				if (rootEntry == null)
 				{
-					GenerateError("Could not find 'RootEntry' node");
+					GenerateError("Could not find 'RootEntry' node.");
 				}
 
 				config.Root = ParseEntry(rootEntry);
@@ -347,14 +333,13 @@ namespace EffectFarm
 					var resultVariants = Substract(variants, outputFile);
 					if (resultVariants.Length == 0)
 					{
-						Log("{0} is up to date", Path.GetFileName(outputFile));
+						Log("{0} is up to date.", Path.GetFileName(outputFile));
 						return;
 					}
 				}
 
 				var workingFolder = Path.GetDirectoryName(inputFile);
 				var includeFx = new IncludeFX(workingFolder);
-				var consoseEffectCompilerOutput = new ConsoleEffectCompilerOutput();
 
 				var importerContext = new ImporterContext();
 				var processorContext = new ProcessorContext();
@@ -362,15 +347,17 @@ namespace EffectFarm
 				var effectImporter = new EffectImporter();
 				var effectProcesor = new EffectProcessor();
 
+				Log("{0} variants of effects are going to be compiled.", variants.Length);
 				using (var stream = File.OpenWrite(outputFile))
 				using (var writer = new BinaryWriter(stream))
 				{
 					writer.Write(Encoding.UTF8.GetBytes(EFParser.EfbSignature));
 					writer.Write(EFParser.EfbVersion);
 
+					var idx = 0;
 					foreach (var variant in variants)
 					{
-						Log(variant.ToString());
+						Log("#" + idx + ": " + variant.ToString());
 
 						switch (variant.Platform)
 						{
@@ -406,10 +393,12 @@ namespace EffectFarm
 							}
 							break;
 						}
+
+						++idx;
 					}
 				}
 
-				Log("Compilation to {0} was succesful", Path.GetFileName(outputFile));
+				Log("Compilation to {0} was succesful.", Path.GetFileName(outputFile));
 			}
 			catch (Exception ex)
 			{

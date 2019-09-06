@@ -20,13 +20,13 @@ namespace EffectFarm
 				var sig = Encoding.UTF8.GetString(reader.ReadBytes(3));
 				if (sig != EfbSignature)
 				{
-					throw new Exception("Wrong signature");
+					throw new Exception("Wrong signature.");
 				}
 
 				var version = reader.ReadInt32();
 				if (version != EfbVersion)
 				{
-					throw new Exception(string.Format("Wrong efb version. File version: {0}, supported version: {1}",
+					throw new Exception(string.Format("Wrong efb version. File version: {0}, supported version: {1}.",
 						version, EfbVersion));
 				}
 
