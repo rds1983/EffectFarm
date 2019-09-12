@@ -12,7 +12,9 @@ It consists of two parts:
 The easiest way to obtain efc is to download it from [releases](https://github.com/rds1983/EffectFarm/releases).
 
 ## Compiling
-`efc.exe DefaultEffect.fx DefaultEffect.xml`
+`efc.exe` requires two parameters: hlsl file and config file.
+
+Example usage: `efc.exe DefaultEffect.fx DefaultEffect.xml`
 
 ## Config
 Following is example of compiler config file:
