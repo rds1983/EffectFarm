@@ -20,8 +20,8 @@ build_script:
 
     build_all.bat
 artifacts:
-  - path: src/EffectFarm/bin/MonoGame/Release/EffectFarm.MonoGame.$(appveyor_build_version).nupkg
-    name: EffectFarm.MonoGame.nupkg
+  - path: src/EffectFarm/bin/MonoGame/Release/EffectFarm.$(appveyor_build_version).nupkg
+    name: EffectFarm.nupkg
 
   - path: src/EffectFarm/bin/FNA/Release/EffectFarm.FNA.$(appveyor_build_version).nupkg
     name: EffectFarm.FNA.nupkg
