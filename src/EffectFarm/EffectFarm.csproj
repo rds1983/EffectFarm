@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Authors>EffectFarmTeam</Authors>
     <Product>EffectFarm</Product>
-    <Description>Lightweight 3D Engine for MonoGame/FNA</Description>
+    <Description>MonoGame/FNA framework to compile multiple variants of a effect</Description>
     <PackageLicenseUrl>https://en.wikipedia.org/wiki/MIT_License</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/rds1983/EffectFarm</PackageProjectUrl>
     <NoWarn>NU1701</NoWarn>
@@ -16,7 +16,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="$(DefineConstants.Contains('MONOGAME'))">
-    <PackageId>EffectFarm.MonoGame</PackageId>
+    <PackageId>EffectFarm</PackageId>
     <OutputPath>bin\MonoGame\$(Configuration)</OutputPath>
   </PropertyGroup>
 

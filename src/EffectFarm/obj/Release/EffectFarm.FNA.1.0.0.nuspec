@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>EffectFarm.FNA</id>
+    <version>1.0.0</version>
+    <authors>EffectFarmTeam</authors>
+    <owners>EffectFarmTeam</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <licenseUrl>https://en.wikipedia.org/wiki/MIT_License</licenseUrl>
+    <projectUrl>https://github.com/rds1983/EffectFarm</projectUrl>
+    <description>MonoGame/FNA framework to compile multiple variants of a effect</description>
+    <dependencies>
+      <group targetFramework=".NETFramework4.5" />
+      <group targetFramework=".NETStandard2.0" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="D:\Projects\EffectFarm\src\EffectFarm\bin\FNA\Release\net45\EffectFarm.dll" target="lib\net45\EffectFarm.dll" />
+    <file src="D:\Projects\EffectFarm\src\EffectFarm\bin\FNA\Release\netstandard2.0\EffectFarm.dll" target="lib\netstandard2.0\EffectFarm.dll" />
+  </files>
+</package>
