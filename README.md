@@ -1,5 +1,5 @@
 # Overview
-[![NuGet](https://img.shields.io/nuget/v/EffectFarm.MonoGame.svg)](https://www.nuget.org/packages/EffectFarm.MonoGame/) [![Build status](https://ci.appveyor.com/api/projects/status/hpb40bec49j88i6o?svg=true)](https://ci.appveyor.com/project/RomanShapiro/effectfarm)
+[![NuGet](https://img.shields.io/nuget/v/EffectFarm.svg)](https://www.nuget.org/packages/EffectFarm/) [![Build status](https://ci.appveyor.com/api/projects/status/hpb40bec49j88i6o?svg=true)](https://ci.appveyor.com/project/RomanShapiro/effectfarm)
 
 EffectFarm is utility framework to compile multiple variants of a effect for multiple different targets(MonoGameDirectX, MonoGameOpenGL and FNA). 
 
@@ -88,7 +88,7 @@ Now to use .efb file, first of all, it is required to reference EffectFarm libra
 
 ## Adding reference to EffectFarm Library
 There are two ways of referencing EffectFarm in the project:
-1. Through nuget: `install-package EffectFarm.MonoGame` for MonoGame(or `install-package EffectFarm.FNA` for FNA)
+1. Through nuget: `install-package EffectFarm` for MonoGame(or `install-package EffectFarm.FNA` for FNA)
 2. As submodule:
     
     a. `git submodule add https://github.com/rds1983/EffectFarm.git`
