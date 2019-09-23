@@ -361,7 +361,7 @@ namespace EffectFarm
 				var effectProcesor = new EffectProcessor();
 
 				Log("{0} variants of effects are going to be compiled.", variants.Length);
-				using (var stream = File.OpenWrite(outputFile))
+				using (var stream = File.Open(outputFile, FileMode.Create))
 				using (var writer = new BinaryWriter(stream))
 				{
 					writer.Write(Encoding.UTF8.GetBytes(EFParser.EfbSignature));
