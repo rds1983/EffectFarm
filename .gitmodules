@@ -1,6 +1,0 @@
-[submodule "deps/MonoGame"]
-	path = deps/MonoGame
-	url = https://github.com/MonoGame/MonoGame.git
-[submodule "deps/FNA"]
-	path = deps/FNA
-	url = https://github.com/rds1983/FNA.git

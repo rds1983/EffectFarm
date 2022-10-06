@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Xml.Linq;
 
@@ -15,6 +16,17 @@ namespace EffectFarm
 {
 	class Program
 	{
+		public static string Version
+		{
+			get
+			{
+				var assembly = typeof(Program).Assembly;
+				var name = new AssemblyName(assembly.FullName);
+
+				return name.Version.ToString();
+			}
+		}
+
 		class IncludeFX : Include
 		{
 			private readonly string _folder;
@@ -283,7 +295,7 @@ namespace EffectFarm
 
 		static void Main(string[] args)
 		{
-			Log("Effect farm compiler to efb {0}.", EFParser.EfbVersion);
+			Log("Effect farm compiler {0} to efb {1}.", Version, EFParser.EfbVersion);
 
 			if (args.Length < 2)
 			{
