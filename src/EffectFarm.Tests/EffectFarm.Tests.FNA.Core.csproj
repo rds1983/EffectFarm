@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <DefineConstants>$(DefineConstants);FNA</DefineConstants>
+    <TargetFrameworks>net6.0-windows</TargetFrameworks>
+    <OutputPath>bin\FNA\$(Configuration)</OutputPath>
+    <OutputType>Library</OutputType>
+    <RootNamespace>EffectFarm.Tests</RootNamespace>
+    <AssemblyName>EffectFarm.Tests</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\**\*.*" />
+  </ItemGroup>  
+
+  <ItemGroup>
+    <PackageReference Include="NUnit" Version="3.12.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.0" />
+  </ItemGroup>  
+
+  <ItemGroup>
+    <ProjectReference Include="..\EffectFarm\EffectFarm.FNA.Core.csproj" />
+  </ItemGroup>  
+
+  <ItemGroup>
+    <None Update="FNA3D.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="SDL2.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>  
+</Project>
