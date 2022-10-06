@@ -21,7 +21,7 @@ jobs:
       with:
         dotnet-version: '6.0.x'
     - name: Build efc
-      run: dotnet build build\efc.sln --configuration Release
+      run: dotnet build src\efc\efc.csproj --configuration Release --runtime win-x64 --no-self-contained
     - name: Build EffectFarm.MonoGame
       run: dotnet build build\EffectFarm.MonoGame.sln --configuration Release
     - name: Test
