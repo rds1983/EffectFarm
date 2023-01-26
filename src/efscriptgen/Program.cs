@@ -46,57 +46,16 @@ namespace EffectFarm
 			return "FNA";
 		}
 
-		static void Process(string[] args)
+		static string BuildScript(string inputFolder, List<string> fxFiles, OutputType outputType)
 		{
-			Log($"EffectFarm script generator {Version}.");
-
-			if (args.Length < 2)
-			{
-				Log("Usage: efscriptgen mgdx11|mgogl|fna <folder>");
-				return;
-			}
-
-			var outputTypeArg = args[0];
-			OutputType outputType;
-			switch(outputTypeArg)
-			{
-				case "mgdx11":
-					outputType = OutputType.MGDX11;
-					break;
-				case "mgogl":
-					outputType = OutputType.MGOGL;
-					break;
-				case "fna":
-					outputType = OutputType.FNA;
-					break;
-				default:
-					Log($"First argument should be either 'mgfx11' or 'mgogl'. Actual value passed '{outputTypeArg}'.");
-					return;
-			}
-
-			var inputFolder = args[1];
-			if (!Directory.Exists(inputFolder))
-			{
-				Log($"Could not find '{inputFolder}'.");
-				return;
-			}
-
-			var fxFiles = Directory.EnumerateFiles(inputFolder, "*.fx").ToList();
-			if (fxFiles.Count == 0)
-			{
-				Log($"No '.fx' found at folder '{inputFolder}'.");
-				return;
-			}
-
 			var outputFolder = Path.Combine(inputFolder, OutputSubfolder(outputType));
-
 			if (!Directory.Exists(outputFolder))
 			{
 				Directory.CreateDirectory(outputFolder);
 			}
 
 			var sb = new StringBuilder();
-			foreach(var fx in fxFiles)
+			foreach (var fx in fxFiles)
 			{
 				var xmlFile = Path.ChangeExtension(fx, "xml");
 				var variants = new List<string>();
@@ -108,7 +67,9 @@ namespace EffectFarm
 						var defineValue = defineTag.Attribute("Value").Value;
 						variants.Add(defineValue);
 					}
-				} else {
+				}
+				else
+				{
 					variants.Add(string.Empty);
 				}
 
@@ -137,7 +98,16 @@ namespace EffectFarm
 
 					if (outputType != OutputType.FNA)
 					{
-						commandLine.Append("mgfxc /profile:");
+						commandLine.Append($"mgfxc \"{fx}\" \"{outputFile}\"");
+					}
+					else
+					{
+						commandLine.Append($"fxc \"{fx}\" /Fo \"{outputFile}\"");
+					}
+
+					if (outputType != OutputType.FNA)
+					{
+						commandLine.Append(" /Profile:");
 						switch (outputType)
 						{
 							case OutputType.MGDX11:
@@ -147,20 +117,17 @@ namespace EffectFarm
 								commandLine.Append("OpenGL");
 								break;
 						}
-						commandLine.Append($" \"{fx}\" \"{outputFile}\"");
+
+						if (!string.IsNullOrEmpty(variant))
+						{
+							commandLine.Append($" /Defines:{variant}");
+						}
 					}
 					else
 					{
-						commandLine.Append($"fxc /T:fx_2_0 /Fo \"{outputFile}\" \"{fx}\"");
-					}
+						commandLine.Append(" /T:fx_2_0");
 
-					if (!string.IsNullOrEmpty(variant))
-					{
-						if (outputType != OutputType.FNA)
-						{
-							commandLine.Append($" /defines:{variant}");
-						}
-						else
+						if (!string.IsNullOrEmpty(variant))
 						{
 							var defines = (from d in variant.Split(";") orderby d select d.Trim()).ToArray();
 							foreach (var def in defines)
@@ -182,11 +149,41 @@ namespace EffectFarm
 				}
 			}
 
-			var scriptFile = Path.Combine(inputFolder, "compile.bat");
+			return sb.ToString();
+		}
 
-			File.WriteAllText(scriptFile, sb.ToString());
+		static void Process(string[] args)
+		{
+			Log($"EffectFarm script generator {Version}.");
 
-			Log($"Generated script '{scriptFile}'.");
+			if (args.Length < 1)
+			{
+				Log("Usage: efscriptgen <folder>");
+				return;
+			}
+
+			var inputFolder = args[0];
+			if (!Directory.Exists(inputFolder))
+			{
+				Log($"Could not find '{inputFolder}'.");
+				return;
+			}
+
+			var fxFiles = Directory.EnumerateFiles(inputFolder, "*.fx").ToList();
+			if (fxFiles.Count == 0)
+			{
+				Log($"No '.fx' found at folder '{inputFolder}'.");
+				return;
+			}
+
+			var script = BuildScript(inputFolder, fxFiles, OutputType.MGDX11);
+			File.WriteAllText(Path.Combine(inputFolder, "compile_mgdx11.bat"), script);
+			script = BuildScript(inputFolder, fxFiles, OutputType.MGOGL);
+			File.WriteAllText(Path.Combine(inputFolder, "compile_mgogl.bat"), script);
+			script = BuildScript(inputFolder, fxFiles, OutputType.FNA);
+			File.WriteAllText(Path.Combine(inputFolder, "compile_fna.bat"), script);
+
+			Log("The scripts generation was a success.");
 		}
 
 		static void Main(string[] args)
