@@ -5,9 +5,7 @@ VisualStudioVersion = 17.1.32328.378
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EffectFarm.MonoGame", "..\src\EffectFarm\EffectFarm.MonoGame.csproj", "{63290012-2298-4774-83EF-C00CBCBC1B50}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EffectFarm.Tests.MonoGame.DesktopGL", "..\src\EffectFarm.Tests\EffectFarm.Tests.MonoGame.DesktopGL.csproj", "{7BD5C182-18DF-4588-AE66-3F2201504E5C}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EffectFarm.Tests.MonoGame.WindowsDX", "..\src\EffectFarm.Tests.MonoGame.WindowsDX\EffectFarm.Tests.MonoGame.WindowsDX.csproj", "{E2FE6E70-D69E-40D9-9CF9-647DA840FAF4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "efscriptgen", "..\src\efscriptgen\efscriptgen.csproj", "{8AADF360-A27C-41EF-B48B-DFDB80304042}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,14 +17,10 @@ Global
 		{63290012-2298-4774-83EF-C00CBCBC1B50}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{63290012-2298-4774-83EF-C00CBCBC1B50}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{63290012-2298-4774-83EF-C00CBCBC1B50}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7BD5C182-18DF-4588-AE66-3F2201504E5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7BD5C182-18DF-4588-AE66-3F2201504E5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7BD5C182-18DF-4588-AE66-3F2201504E5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7BD5C182-18DF-4588-AE66-3F2201504E5C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E2FE6E70-D69E-40D9-9CF9-647DA840FAF4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E2FE6E70-D69E-40D9-9CF9-647DA840FAF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E2FE6E70-D69E-40D9-9CF9-647DA840FAF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E2FE6E70-D69E-40D9-9CF9-647DA840FAF4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8AADF360-A27C-41EF-B48B-DFDB80304042}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8AADF360-A27C-41EF-B48B-DFDB80304042}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8AADF360-A27C-41EF-B48B-DFDB80304042}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8AADF360-A27C-41EF-B48B-DFDB80304042}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

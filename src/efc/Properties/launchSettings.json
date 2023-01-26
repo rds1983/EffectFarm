@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "EffectFarm.Compiler": {
-      "commandName": "Project",
-      "commandLineArgs": "$(ProjectDir)..\\..\\samples\\DefaultEffect.fx $(ProjectDir)..\\..\\samples\\DefaultEffect.xml"
-    }
-  }
-}
