@@ -1,15 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Xml.Linq;
 
 namespace EffectFarm
 {
 	enum OutputType
 	{
 		MGDX11,
-		MGOGL
+		MGOGL,
+		FNA
 	}
 
 	class Program
@@ -49,7 +52,7 @@ namespace EffectFarm
 
 			if (args.Length < 2)
 			{
-				Log("Usage: efscriptgen mgdx11|mgogl <folder>");
+				Log("Usage: efscriptgen mgdx11|mgogl|fna <folder>");
 				return;
 			}
 
@@ -62,6 +65,9 @@ namespace EffectFarm
 					break;
 				case "mgogl":
 					outputType = OutputType.MGOGL;
+					break;
+				case "fna":
+					outputType = OutputType.FNA;
 					break;
 				default:
 					Log($"First argument should be either 'mgfx11' or 'mgogl'. Actual value passed '{outputTypeArg}'.");
@@ -83,21 +89,97 @@ namespace EffectFarm
 			}
 
 			var outputFolder = Path.Combine(inputFolder, OutputSubfolder(outputType));
+
+			if (!Directory.Exists(outputFolder))
+			{
+				Directory.CreateDirectory(outputFolder);
+			}
+
 			var sb = new StringBuilder();
 			foreach(var fx in fxFiles)
 			{
-				var outputFile = Path.Combine(outputFolder, Path.ChangeExtension(Path.GetFileName(fx), "mgfxo"));
-
-				switch (outputType)
+				var xmlFile = Path.ChangeExtension(fx, "xml");
+				var variants = new List<string>();
+				if (File.Exists(xmlFile))
 				{
-					case OutputType.MGDX11:
-						sb.AppendLine($"mgfxc \"{fx}\" \"{outputFile}\" /profile:DirectX_11");
-						break;
-					case OutputType.MGOGL:
-						sb.AppendLine($"mgfxc \"{fx}\" \"{outputFile}\" /profile:OpenGL");
-						break;
+					var xDoc = XDocument.Load(xmlFile);
+					foreach (var defineTag in xDoc.Root.Elements())
+					{
+						var defineValue = defineTag.Attribute("Value").Value;
+						variants.Add(defineValue);
+					}
+				} else {
+					variants.Add(string.Empty);
 				}
 
+				foreach (var variant in variants)
+				{
+					var postFix = string.Empty;
+					if (!string.IsNullOrEmpty(variant))
+					{
+						var defines = (from d in variant.Split(";") orderby d select d.Trim()).ToArray();
+						foreach (var def in defines)
+						{
+							var defineParts = (from d in def.Split("=") select d.Trim()).ToArray();
+							foreach (var part in defineParts)
+							{
+								postFix += "_";
+								postFix += part;
+							}
+						}
+					}
+
+					var outputFile = Path.GetFileNameWithoutExtension(fx) + postFix;
+					var outputExt = outputType != OutputType.FNA ? "mgfxo" : "fxc";
+					outputFile = Path.Combine(outputFolder, Path.ChangeExtension(outputFile, outputExt));
+
+					var commandLine = new StringBuilder();
+
+					if (outputType != OutputType.FNA)
+					{
+						commandLine.Append("mgfxc /profile:");
+						switch (outputType)
+						{
+							case OutputType.MGDX11:
+								commandLine.Append("DirectX_11");
+								break;
+							case OutputType.MGOGL:
+								commandLine.Append("OpenGL");
+								break;
+						}
+						commandLine.Append($" \"{fx}\" \"{outputFile}\"");
+					}
+					else
+					{
+						commandLine.Append($"fxc /T:fx_2_0 /Fo \"{outputFile}\" \"{fx}\"");
+					}
+
+					if (!string.IsNullOrEmpty(variant))
+					{
+						if (outputType != OutputType.FNA)
+						{
+							commandLine.Append($" /defines:{variant}");
+						}
+						else
+						{
+							var defines = (from d in variant.Split(";") orderby d select d.Trim()).ToArray();
+							foreach (var def in defines)
+							{
+								var defineParts = (from d in def.Split("=") select d.Trim()).ToArray();
+								if (defineParts.Length == 1)
+								{
+									commandLine.Append($" /D {defineParts[0]}=1");
+								}
+								else
+								{
+									commandLine.Append($" /D {defineParts[0]}={defineParts[1]}");
+								}
+							}
+						}
+					}
+
+					sb.AppendLine(commandLine.ToString());
+				}
 			}
 
 			var scriptFile = Path.Combine(inputFolder, "compile.bat");
