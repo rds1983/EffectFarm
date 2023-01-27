@@ -99,24 +99,8 @@ namespace EffectFarm
 					if (outputType != OutputType.FNA)
 					{
 						commandLine.Append($"mgfxc \"{fx}\" \"{outputFile}\"");
-					}
-					else
-					{
-						commandLine.Append($"fxc \"{fx}\" /Fo \"{outputFile}\"");
-					}
-
-					if (outputType != OutputType.FNA)
-					{
 						commandLine.Append(" /Profile:");
-						switch (outputType)
-						{
-							case OutputType.MGDX11:
-								commandLine.Append("DirectX_11");
-								break;
-							case OutputType.MGOGL:
-								commandLine.Append("OpenGL");
-								break;
-						}
+						commandLine.Append(outputType == OutputType.MGDX11?"DirectX_11": "OpenGL");
 
 						if (!string.IsNullOrEmpty(variant))
 						{
@@ -125,6 +109,7 @@ namespace EffectFarm
 					}
 					else
 					{
+						commandLine.Append($"fxc \"{fx}\" /Fo \"{outputFile}\"");
 						commandLine.Append(" /T:fx_2_0");
 
 						if (!string.IsNullOrEmpty(variant))
