@@ -1,13 +1,9 @@
 <Project>
   <PropertyGroup>
     <Authors>EffectFarmTeam</Authors>
-    <Product>EffectFarm</Product>
     <Description>MonoGame/FNA framework to compile multiple variants of a effect</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/rds1983/EffectFarm</PackageProjectUrl>
-    <AssemblyName>EffectFarm</AssemblyName>
-    <RootNamespace>EffectFarm</RootNamespace>
-    <VersionPrefix>1.1.0</VersionPrefix>
-    <MonoGameVersion>3.8.1.303</MonoGameVersion>
+    <Version>0.6.0</Version>
   </PropertyGroup>
 </Project>
