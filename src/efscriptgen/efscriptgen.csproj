@@ -3,6 +3,7 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
     <PackAsTool>true</PackAsTool>
+    <PackageId>dotnet-efscriptgen</PackageId>
     <ToolCommandName>botsay</ToolCommandName>
   </PropertyGroup>
 

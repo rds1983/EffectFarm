@@ -22,5 +22,5 @@ jobs:
       uses: NuGet/setup-nuget@v1
     - name: Publish efscriptgen to NuGet
       run: nuget.exe push src\efscriptgen\bin\Release\efscriptgen.*.nupkg ${{secrets.NUGET_APIKEY}} -Source https://api.nuget.org/v3/index.json
-    - name: Publish EffectFarm to NuGet
+    - name: Publish EffectFarm.MonoGame to NuGet
       run: nuget.exe push src\EffectFarm\bin\MonoGame\Release\EffectFarm.*.nupkg ${{secrets.NUGET_APIKEY}} -Source https://api.nuget.org/v3/index.json
