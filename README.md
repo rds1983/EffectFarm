@@ -14,6 +14,7 @@ It consists of two parts:
 
 ## Usage
 efscriptgen usage is quite simple: `efscriptgen.exe <folder>`
+
 The utility would go through every .fx file in the specified folder and generate 3 batch scripts:
 * compile_fna.bat
 * compile_mgdx11.bat
