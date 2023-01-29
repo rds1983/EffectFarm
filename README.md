@@ -1,5 +1,5 @@
 # Overview
-[![NuGet](https://img.shields.io/nuget/v/EffectFarm.svg)](https://www.nuget.org/packages/EffectFarm.MonoGame/)
+[![NuGet](https://img.shields.io/nuget/v/EffectFarm.MonoGame.svg)](https://www.nuget.org/packages/EffectFarm.MonoGame/)
 [![Chat](https://img.shields.io/discord/628186029488340992.svg)](https://discord.gg/ZeHxhCY)
 
 EffectFarm is MonoGame/FNA framework to help compilation of many effects.
