@@ -2,7 +2,7 @@
 [![NuGet](https://img.shields.io/nuget/v/EffectFarm.svg)](https://www.nuget.org/packages/EffectFarm.MonoGame/)
 [![Chat](https://img.shields.io/discord/628186029488340992.svg)](https://discord.gg/ZeHxhCY)
 
-EffectFarm is MonoGame/FNA framework to help compilation of many effects, where some may have multiple variants with different definitions.
+EffectFarm is MonoGame/FNA framework to help compilation of many effects.
 
 It consists of two parts:
 * efscriptgen.exe - a command line utility that generates batch scripts for compiling all effects in the specified folder.
