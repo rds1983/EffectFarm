@@ -5,14 +5,14 @@
 EffectFarm is MonoGame/FNA framework to help compilation of many effects, where some may have multiple variants with different definitions.
 
 It consists of two parts:
-* efscriptgen.exe - a command line utility that compiles multiple variants of one effect according to provided config file in xml format.
-* EffectFarm - a library to consume result produced by efc.exe
+* efscriptgen.exe - a command line utility that generates batch scripts for compiling all effects in the specified folder.
+* EffectFarm - a class library to consume result produced by efc.exe
 
-# efc.exe
-## Obtaining
-The easiest way to obtain efc is to download it from [releases](https://github.com/rds1983/EffectFarm/releases).
+# efscriptgen.exe
+## Installation
+`dotnet tool install -g efscriptgen`
 
-## Compiling
+## Usage
 `efc.exe` requires two parameters: hlsl file and config file.
 
 Example usage: `efc.exe DefaultEffect.fx DefaultEffect.xml`
