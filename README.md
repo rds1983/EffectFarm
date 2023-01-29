@@ -5,15 +5,21 @@
 EffectFarm is MonoGame/FNA framework to help compilation of many effects.
 
 It consists of two parts:
-* efscriptgen.exe - a command line utility that generates batch scripts for compiling all effects in the specified folder.
-* EffectFarm - a class library to consume result produced by efc.exe
+* efscriptgen.exe - a command line utility that generates batch scripts for compiling all effects in the specified folder
+* EffectFarm - a class library that loads effects generated through those batch scripts 
 
 # efscriptgen.exe
 ## Installation
 `dotnet tool install -g efscriptgen`
 
 ## Usage
-`efc.exe` requires two parameters: hlsl file and config file.
+efscriptgen usage is quite simple: `efscriptgen.exe <folder>`
+The utility would go through every .fx file in the specified folder and generate 3 batch scripts:
+* compile_fna.bat
+* compile_mgdx11.bat
+* compile_mgogl.bat
+
+Every batch script
 
 Example usage: `efc.exe DefaultEffect.fx DefaultEffect.xml`
 
