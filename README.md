@@ -21,6 +21,7 @@ The utility would go through every .fx file in the specified folder and generate
 * compile_mgogl.bat
 
 Every batch script would contain commands to compile effects for the corresponding platform.
+
 I.e. sample compile_mgogl.bat would look like this:
 ```
 mgfxc ".\a.fx" ".\MonoGameOGL\a.mgfxo" /Profile:OpenGL
