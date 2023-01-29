@@ -20,7 +20,15 @@ The utility would go through every .fx file in the specified folder and generate
 * compile_mgdx11.bat
 * compile_mgogl.bat
 
-Every batch script
+Every batch script would contain commands to compile effects for the corresponding platform.
+I.e. sample compile_mgogl.bat would look like this:
+```
+mgfxc ".\a.fx" ".\MonoGameOGL\a.mgfxo" /Profile:OpenGL
+mgfxc ".\b.fx" ".\MonoGameOGL\b.mgfxo" /Profile:OpenGL
+mgfxc ".\c.fx" ".\MonoGameOGL\c.mgfxo" /Profile:OpenGL
+```
+
+If you want a specific effect to be compiled with one or more set of defines, then you need to 
 
 Example usage: `efc.exe DefaultEffect.fx DefaultEffect.xml`
 
