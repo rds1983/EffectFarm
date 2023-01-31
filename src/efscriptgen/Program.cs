@@ -38,7 +38,7 @@ namespace EffectFarm
 			switch (outputType)
 			{
 				case OutputType.MGDX11:
-					return "MonogameDX11";
+					return "MonoGameDX11";
 				case OutputType.MGOGL:
 					return "MonoGameOGL";
 			}
@@ -64,8 +64,13 @@ namespace EffectFarm
 					var xDoc = XDocument.Load(xmlFile);
 					foreach (var defineTag in xDoc.Root.Elements())
 					{
-						var defineValue = defineTag.Attribute("Value").Value;
-						variants.Add(defineValue);
+						if (defineTag.Attribute("Value") != null)
+						{
+							var defineValue = defineTag.Attribute("Value").Value;
+							variants.Add(defineValue);
+						} else {
+							variants.Add(string.Empty);
+						}
 					}
 				}
 				else
@@ -91,7 +96,7 @@ namespace EffectFarm
 					}
 
 					var outputFile = Path.GetFileNameWithoutExtension(fx) + postFix;
-					var outputExt = outputType != OutputType.FNA ? "mgfxo" : "fxc";
+					var outputExt = outputType != OutputType.FNA ? "mgfxo" : "fxo";
 					outputFile = Path.Combine(outputFolder, Path.ChangeExtension(outputFile, outputExt));
 
 					var commandLine = new StringBuilder();

@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <PackageId>EffectFarm.MonoGame</PackageId>
     <DefineConstants>$(DefineConstants);MONOGAME</DefineConstants>
     <OutputPath>bin\MonoGame\$(Configuration)</OutputPath>
@@ -11,6 +11,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MonoGame.Framework.Portable" PrivateAssets="All" Version="3.7.1.189" />
+    <PackageReference Include="MonoGame.Framework.DesktopGL" PrivateAssets="true" Version="3.8.1.303" />
   </ItemGroup>
 </Project>

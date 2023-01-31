@@ -4,6 +4,6 @@
     <Description>MonoGame/FNA framework to compile multiple variants of a effect</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/rds1983/EffectFarm</PackageProjectUrl>
-    <Version>0.6.0</Version>
+    <Version>0.6.1</Version>
   </PropertyGroup>
 </Project>

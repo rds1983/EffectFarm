@@ -5,10 +5,39 @@ using System.IO;
 using System.Text;
 using System.Linq;
 
+#if MONOGAME
+using MonoGame.Framework.Utilities;
+#endif
+
 namespace EffectFarm
 {
 	public class EffectsRepository
 	{
+#if MONOGAME
+		private static string _effectExtension = "mgfxo";
+#else
+		private static string _effectExtension = "fxo";
+#endif
+
+		public static string EffectExtension
+		{
+			get => _effectExtension;
+			set => _effectExtension = value;
+		}
+
+		public static string EffectsSubfolder
+		{
+			get
+			{
+#if MONOGAME
+				return PlatformInfo.GraphicsBackend == GraphicsBackend.OpenGL ? "MonoGameOGL" : "MonoGameDX11";
+#else
+				return "FNA";
+#endif
+			}
+		}
+
+
 		private Func<string, Stream> _assetOpener;
 		private readonly Dictionary<string, Effect> _effectsCache = new Dictionary<string, Effect>();
 
@@ -52,11 +81,7 @@ namespace EffectFarm
 			Effect result;
 			if (!_effectsCache.TryGetValue(keyString, out result))
 			{
-#if MONOGAME
-				var fileName = keyString + ".mgfxo";
-#else
-				var fileName = keyString + ".fxc";
-#endif
+				var fileName = keyString + "." + EffectExtension;
 
 				var ms = new MemoryStream();
 				using (var stream = _assetOpener(fileName))
