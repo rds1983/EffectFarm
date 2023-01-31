@@ -54,18 +54,15 @@ As you can see the defines would be included in the names of compiled effects.
 
 # EffectFarm Class Library
 ## Installation for MonoGame
+https://www.nuget.org/packages/EffectFarm.MonoGame/
 ## Installation for FNA
 ## Usage
     
-
-And this code loads specified effect:
 ```c#
-  Effect effect = multiEffect.GetEffect(graphicsDevice, new Dictionary<string, string>
+  EffectsRepository effectsRepo = EffectsRepository.CreateFromFolder(@"D:\Projects\Nursia\src\Nursia\EffectsSource\FNA");
+  Effect effect = effectsRepo.GetEffect(graphicsDevice, new Dictionary<string, string>
   {
     ["BONES"]="1",
     ["LIGHTNING"]="1"
   });
 ```
-
-It is important to note that MultiVariantEffect.GetEffect caches Effect with key created from provided list of defines.
-
